@@ -91,6 +91,7 @@ def generate_default_boxes(feature_map_shapes, number_of_feature_maps, aspect_ra
     assert len(feature_map_shapes) == len(aspect_ratios), 'Need aspect ratios for all feature maps'
 
     prior_boxes = []
+    prior_boxes_coco = []
 
     for k, f_k in enumerate(feature_map_shapes):
         s_k = calculate_scale_of_default_boxes(k, m = number_of_feature_maps, s_max=s_max, s_min=s_min)
@@ -102,13 +103,16 @@ def generate_default_boxes(feature_map_shapes, number_of_feature_maps, aspect_ra
 
                  # for the square box don't rotate by 90
                 for angle in angles[:-1]:
+                    prior_boxes_coco.append([cx, cy, s_k, s_k, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k, angle, 'deg'))
 
                 for angle in angles:
+                    prior_boxes_coco.append([cx, cy, s_k, s_k_prime, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k_prime, angle, 'deg'))
 
                 for ar in aspect_ratios[k]:
                     for angle in angles:
+                        prior_boxes_coco.append([cx, cy, s_k*np.sqrt(ar), s_k/np.sqrt(ar), angle * np.pi / 180])
                         prior_boxes.append(rotateRectangle(cx, cy, s_k*np.sqrt(ar), s_k/np.sqrt(ar), angle, 'deg'))
-                        
-    return prior_boxes
+
+    return prior_boxes, prior_boxes_coco

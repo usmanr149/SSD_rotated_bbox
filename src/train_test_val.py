@@ -31,12 +31,12 @@ def getSegments(data, image_id, desired_category = [1,3,17,18]):
 
                     rect = cv2.minAreaRect(pts)
                     box = cv2.boxPoints(rect)
-
-                    segments.append([data['annotations'][i]['category_id']] + list(box.reshape(-1)))
+                    label = data['annotations'][i]['category_id']
+                    segments.append( [ label ] + list(box.reshape(-1)))
 
     return segments
 
-def writeBoxDimensions(images_dir, labels_files):
+def writeBoxDimensions(images_dir, labels_files, output_folder):
 
     with open(labels_files, 'r') as f:
         data = json.load(f)
@@ -54,7 +54,7 @@ def writeBoxDimensions(images_dir, labels_files):
         # get segments of interest for image_id
         segments = getSegments(data, image_id)
         
-        path = os.path.join('input/train', file_name.replace('.jpg', '') + '.txt')
+        path = os.path.join(output_folder, file_name.replace('.jpg', '') + '.txt')
 
         writeToFile(path, segments)
 
@@ -75,8 +75,9 @@ if __name__ == '__main__':
 
     parser.add_argument('-i', '--image_dir_path', help='image directory path')
     parser.add_argument('-l', '--label_file_path', help='label files')
+    parser.add_argument('-o', '--output_folder', help='output path for outputs')
 
     args = vars(parser.parse_args())
 
-    writeBoxDimensions(args['image_dir_path'], args['label_file_path'])
+    writeBoxDimensions(args['image_dir_path'], args['label_file_path'], args['output_folder'])
 
