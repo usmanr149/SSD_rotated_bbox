@@ -106,6 +106,7 @@ def generate_default_boxes(feature_map_shapes, number_of_feature_maps, aspect_ra
                     prior_boxes_coco.append([cx, cy, s_k, s_k, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k, angle, 'deg'))
 
+                # aspect ratio 1
                 for angle in angles:
                     prior_boxes_coco.append([cx, cy, s_k, s_k_prime, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k_prime, angle, 'deg'))
