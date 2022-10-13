@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # cat: 17
     # dog: 18
 
-    # python src/train_test_val.py -i '/Users/usmanr/fiftyone/coco-2014/train/data/*jpg' -l /Users/usmanr/fiftyone/coco-2014/train/labels.json
+    # python src/train_test_val.py -i '/home/usman/coco-2014/train/data/*.jpg' -l /home/usman/coco-2014/train/labels.json -o /home/usman/workspace/SSD_rotated_bbox_input/input/train
 
     parser = argparse.ArgumentParser()
 
