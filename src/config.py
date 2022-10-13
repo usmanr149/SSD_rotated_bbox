@@ -12,7 +12,9 @@ aspect_ratios = [
 angles = [ -45, 0, 45, 90]
 
 n_boxes = [3, 4, 4, 4, 3, 3]
-angles = [4, 4, 4, 4, 4, 4]
+n_angles = [4, 4, 4, 4, 4, 4]
 
 s_max = 0.7
 s_min = 0.2
+
+number_of_labels = 4
