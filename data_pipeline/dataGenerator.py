@@ -37,6 +37,7 @@ class DataGenerator(keras.utils.Sequence):
                 image_folder_path, 
                 prior_boxes,
                 prior_boxes_coco_form,
+                prior_box_area,
                 batch_size = 8, 
                 n_classes = 5, 
                 image_height = 300,
@@ -53,6 +54,7 @@ class DataGenerator(keras.utils.Sequence):
         self.image_folder_path = image_folder_path
         self.prior_boxes = prior_boxes
         self.prior_boxes_coco_form = prior_boxes_coco_form
+        self.prior_box_area = prior_box_area
         self.image_height = image_height
         self.image_width = image_width
         self.normalize = normalize
@@ -131,6 +133,7 @@ class DataGenerator(keras.utils.Sequence):
             offset, one_hot_encoded_label = match_priors_with_gt(   
                                                             self.prior_boxes, 
                                                             self.prior_boxes_coco_form, 
+                                                            self.prior_box_area,
                                                             gt_boxes_normalized, 
                                                             gt_boxes_coco,
                                                             tf.constant(gt_labels), 
