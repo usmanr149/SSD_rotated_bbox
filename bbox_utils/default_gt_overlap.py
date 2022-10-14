@@ -15,7 +15,7 @@ def calculate_offset_from_gt(gt_boxes_mapped_to_prior, prior_boxes):
 
     return tf.transpose(tf.expand_dims(offset, axis = 0), perm=[0,2,1])
 
-def match_priors_with_gt(prior_boxes, prior_boxes_coco, gt_boxes, gt_boxes_coco, gt_labels, number_of_labels, threshold = 0.5):
+def match_priors_with_gt(prior_boxes, prior_boxes_coco, prior_box_area, gt_boxes, gt_boxes_coco, gt_labels, number_of_labels, threshold = 0.5):
     """
         Input:
             prior_boxes: default boxes in form (x1, y1, x2, y2, x3, y3, x4, y4)
@@ -25,9 +25,11 @@ def match_priors_with_gt(prior_boxes, prior_boxes_coco, gt_boxes, gt_boxes_coco,
     """
 
     IOU_map = np.zeros((1, len(prior_boxes), len(gt_boxes)))
+    gt_boxes = np.array(gt_boxes, np.float32)
+    gt_boxes_coco = np.array(gt_boxes_coco, np.float32)
 
     for i in range(len(gt_boxes)):
-        IOU_map[:, :, i] = getIOUOverallDefaultBox(prior_boxes, np.array(gt_boxes[i]))
+        IOU_map[:, :, i] = getIOUOverallDefaultBox( prior_boxes, gt_boxes[i], prior_boxes_coco, gt_boxes_coco[i], prior_box_area )
 
     # select the box with the highest IOU
     highest_overlap_idx = tf.math.argmax(IOU_map, axis = 1)
