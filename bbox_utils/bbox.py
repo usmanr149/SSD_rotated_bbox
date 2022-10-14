@@ -92,6 +92,7 @@ def generate_default_boxes(feature_map_shapes, number_of_feature_maps, aspect_ra
 
     prior_boxes = []
     prior_boxes_coco = []
+    prior_box_area = []
 
     for k, f_k in enumerate(feature_map_shapes):
         s_k = calculate_scale_of_default_boxes(k, m = number_of_feature_maps, s_max=s_max, s_min=s_min)
@@ -105,15 +106,18 @@ def generate_default_boxes(feature_map_shapes, number_of_feature_maps, aspect_ra
                 for angle in angles[:-1]:
                     prior_boxes_coco.append([cx, cy, s_k, s_k, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k, angle, 'deg'))
+                    prior_box_area.append(s_k * s_k)
 
                 # aspect ratio 1
                 for angle in angles:
                     prior_boxes_coco.append([cx, cy, s_k, s_k_prime, angle * np.pi / 180])
                     prior_boxes.append(rotateRectangle(cx, cy, s_k, s_k_prime, angle, 'deg'))
+                    prior_box_area.append(s_k * s_k_prime)
 
                 for ar in aspect_ratios[k]:
                     for angle in angles:
                         prior_boxes_coco.append([cx, cy, s_k*np.sqrt(ar), s_k/np.sqrt(ar), angle * np.pi / 180])
                         prior_boxes.append(rotateRectangle(cx, cy, s_k*np.sqrt(ar), s_k/np.sqrt(ar), angle, 'deg'))
+                        prior_box_area.append( s_k*np.sqrt(ar) * s_k/np.sqrt(ar) )
 
-    return prior_boxes, prior_boxes_coco
+    return np.array(prior_boxes), np.array(prior_boxes_coco), np.array(prior_box_area)
